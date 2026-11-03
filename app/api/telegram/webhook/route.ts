@@ -11,13 +11,21 @@ export async function GET() {
       database: "connected",
       service: "telegram-webhook",
     });
-  } catch (error) {
-    console.error("Database connection error:", error);
+  } catch (error: any) {
+    console.error("MYSQL CONNECTION ERROR:", {
+      code: error.code,
+      message: error.message,
+      errno: error.errno,
+      syscall: error.syscall,
+      address: error.address,
+      port: error.port,
+    });
 
     return NextResponse.json(
       {
         status: "error",
         database: "disconnected",
+        errorCode: error.code || "UNKNOWN",
       },
       { status: 500 }
     );
