@@ -1,58 +1,46 @@
-import { db } from "@/lib/db";
-import { NextRequest, NextResponse } from "next/server";
-
+import net from "node:net";
+import { NextResponse } from "next/server";
 
 export async function GET() {
-  try {
-    await db.query("SELECT 1");
+  const host = process.env.DB_HOST!;
+  const port = Number(process.env.DB_PORT || 3306);
 
-    return NextResponse.json({
-      status: "ok",
-      database: "connected",
-      service: "telegram-webhook",
+  return new Promise((resolve) => {
+    const socket = net.createConnection({ host, port });
+
+    socket.setTimeout(5000);
+
+    socket.on("connect", () => {
+      socket.destroy();
+      resolve(
+        NextResponse.json({
+          tcp: "connected",
+          host,
+          port,
+        })
+      );
     });
-  } catch (error: any) {
-    console.error("MYSQL CONNECTION ERROR:", {
-      code: error.code,
-      message: error.message,
-      errno: error.errno,
-      syscall: error.syscall,
-      address: error.address,
-      port: error.port,
+
+    socket.on("error", (error) => {
+      resolve(
+        NextResponse.json({
+          tcp: "failed",
+        
+          host,
+          port,
+        })
+      );
     });
 
-    return NextResponse.json(
-      {
-        status: "error",
-        database: "disconnected",
-        errorCode: error.code || "UNKNOWN",
-      },
-      { status: 500 }
-    );
-  }
-}
-
-export async function POST(req: NextRequest) {
-  const update = await req.json();
-
-  if (!update.channel_post) {
-    return NextResponse.json({ ok: true });
-  }
-
-  const post = update.channel_post;
-
-  await db.execute(
-    `INSERT INTO telegram_posts
-      (telegram_message_id, text, published_at)
-     VALUES (?, ?, FROM_UNIXTIME(?))
-     ON DUPLICATE KEY UPDATE
-      text = VALUES(text)`,
-    [
-      post.message_id,
-      post.text || post.caption || "",
-      post.date
-    ]
-  );
-
-  return NextResponse.json({ ok: true });
+    socket.on("timeout", () => {
+      socket.destroy();
+      resolve(
+        NextResponse.json({
+          tcp: "timeout",
+          host,
+          port,
+        })
+      );
+    });
+  });
 }
