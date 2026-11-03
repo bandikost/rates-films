@@ -1,6 +1,29 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
+export const runtime = "nodejs";
+
+export async function GET() {
+  try {
+    await db.query("SELECT 1");
+
+    return NextResponse.json({
+      status: "ok",
+      database: "connected",
+      service: "telegram-webhook",
+    });
+  } catch (error) {
+    console.error("Database connection error:", error);
+
+    return NextResponse.json(
+      {
+        status: "error",
+        database: "disconnected",
+      },
+      { status: 500 }
+    );
+  }
+}
 
 export async function POST(req: NextRequest) {
   const update = await req.json();
