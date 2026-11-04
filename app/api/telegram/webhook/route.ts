@@ -52,7 +52,11 @@ if (!secret || receivedSecret !== secret) {
     }
 
     const channelId = String(post.chat.id);
-
+console.log("CHANNEL CHECK:", {
+  receivedChannelId: channelId,
+  expectedChannelId: process.env.TELEGRAM_CHANNEL_ID,
+  matches: channelId === process.env.TELEGRAM_CHANNEL_ID,
+});
     if (
       process.env.TELEGRAM_CHANNEL_ID &&
       channelId !== process.env.TELEGRAM_CHANNEL_ID
@@ -61,7 +65,7 @@ if (!secret || receivedSecret !== secret) {
     }
 
     const isEdited = Boolean(update.edited_channel_post);
-
+console.log("INSERTING TELEGRAM POST:", post.message_id)
     await db.execute(
       `INSERT INTO telegram_posts (
         channel_id,
