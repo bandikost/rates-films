@@ -23,16 +23,24 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
-    const receivedSecret = req.headers.get(
-      "x-telegram-bot-api-secret-token"
-    );
+const receivedSecret = req.headers.get(
+  "x-telegram-bot-api-secret-token"
+);
 
-    if (!secret || receivedSecret !== secret) {
-      return NextResponse.json(
-        { ok: false, error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
+console.log("WEBHOOK AUTH CHECK:", {
+  envExists: Boolean(secret),
+  receivedExists: Boolean(receivedSecret),
+  envLength: secret?.length,
+  receivedLength: receivedSecret?.length,
+  matches: secret === receivedSecret,
+});
+
+if (!secret || receivedSecret !== secret) {
+  return NextResponse.json(
+    { ok: false, error: "Unauthorized" },
+    { status: 401 }
+  );
+}
 
     const update = await req.json();
 
