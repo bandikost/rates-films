@@ -1,9 +1,15 @@
+import Posts from "./components/Posts";
+
 
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      shdkjflk
-    </div>
+    <main className="min-h-screen bg-zinc-950 text-white p-8">
+      <h1 className="text-2xl font-bold mb-6">
+        Telegram Posts
+      </h1>
+
+      <Posts />
+    </main>
   );
 }
