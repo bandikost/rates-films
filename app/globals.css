@@ -1,26 +1,116 @@
+
 @import "tailwindcss";
+@font-face {
+  font-family: "Futura";
+  src: url("/fonts/FuturaBook.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Futura";
+  src: url("/fonts/FuturaMedium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Futura";
+  src: url("/fonts/FuturaBold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #e5e1d8;
+  --white-paper: #f1eee6;
+  --ink: #242321;
+  --muted: #77736c;
+  --line: #c8c2b7;
+  --link: #365c82;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-serif: Georgia, "Times New Roman", serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Futura", sans-serif;
+}
+
+::selection {
+  background: #242321;
+  color: #f1eee6;
+}
+
+.journal {
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(#77736c 0.45px, transparent 0.45px);
+  background-size: 5px 5px;
+}
+
+.journal-inner {
+  background: var(--white-paper);
+  box-shadow: 0 2px 15px rgba(30, 25, 20, 0.09);
+}
+
+.journal-title {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 900;
+  letter-spacing: -0.065em;
+}
+
+.journal-post {
+  border-bottom: 1px solid var(--line);
+}
+
+.journal-post:last-child {
+  border-bottom: 0;
+}
+
+.journal-post img {
+  filter: grayscale(100%) contrast(1.08);
+}
+
+.journal-link {
+  color: var(--link);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.journal-link:hover {
+  color: #111;
+}
+
+.journal-image {
+  filter: grayscale(100%) contrast(1.08);
+}
+
+.journal-sidebar {
+  border-left: 1px solid var(--line);
+}
+
+@media (max-width: 767px) {
+  .journal-sidebar {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
 }
