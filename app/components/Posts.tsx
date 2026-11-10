@@ -11,7 +11,7 @@ export default function Posts() {
   useEffect(() => {
     async function fetchPosts() {
       try {
-        const res = await fetch("/api/posts", {
+        const res = await fetch("/api/telegram/posts", {
           cache: "no-store",
         });
 
